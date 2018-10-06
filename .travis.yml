@@ -1,0 +1,9 @@
+language: node_js
+node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: svdu+bFcovpxIeZGDsJN4GQbJ0JCII6c+ydmU8iwT43eRysmN3/3YRUl0tCPCN9YAJzB2acDzR2djgKHLlFG9vGeB6a+WsvZJm9wcxIwzacNcbQC29nDny0W25FvuLYhKLk3pCQ7uHl/1WFTCZnIyhC2Hsdchzr+oio9f/0RMgK/J7keiRDN7zJpOhbMtw+o664qIYqzJvTfWjjnSmobwYYe1u5YcCpeBDhLAMdZniNLAar4whl3IocdR7qhLqCZAnSGSLkAe+xwSlV4T6CdxH67RBagJiEgcxveu5ZgUImGxu0SyfU6LB3TBGnuzVqQCu9CZMOKxoewDB9EHyJNPX+qhIqI8l8yaz94dasFHjEdbRPmB2PfjHonN17QpQc6+0kavkmSZIznNiFOxH5almjpd1UbXLqrztsHg2NRVmRwhCuS7RlJH+rBOD1PTMIx7/4mXWqlQwUi9EEpIwRun2VQgJ9htTLkbAi4xBp2YDLTeMg7U6k/yj50HJkUehF3/lknO0+unslVaE7IvRjtP2xhruAbdiGNvnPlb2nK6+cW8kIG+OVBEMWLWFYur/4hjHunzhITqGaMq+KE6nktSL9cGKWBBiXngCWLUGFejLkoY4LFvMfW1Wkytf2Pt35k3zN+wByAVc/x2aGYCBsI7R3RHvZJnKD/y9jvccBlGFg=
+  app: glacial-temple-43715
+  on:
+    repo: esokoletsky/fullstack-capstone
