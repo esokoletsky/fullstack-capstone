@@ -8,6 +8,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
   });
 
+let server;
 
 function runServer() {
   const port = process.env.PORT || 8080;
