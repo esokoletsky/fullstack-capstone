@@ -1,6 +1,8 @@
 "use strict"
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const faker = require('faker');
 app.use(express.static('public'));
 
 

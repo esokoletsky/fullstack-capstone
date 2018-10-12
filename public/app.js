@@ -49,10 +49,10 @@ function getRoutines(callbackFn) {
 
 function displayRoutine(data) {
 
-    for (routine in data.routines) {
-        $("body").append(
-            "<p>" + routine.day + "<p>");
-    }
+   let routines =  data.routines.map(routine =>  {
+          return `<p>${routine.day}</p>`;
+    });
+    $("body").append(routines);          
 }
 
 $(function() {

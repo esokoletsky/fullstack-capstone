@@ -1,7 +1,6 @@
 {
   "name": "fullstack-capstone",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "mocha --exit",
@@ -12,7 +11,22 @@
   "dependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
-    "express": "^4.16.3",
-    "mocha": "^5.2.0"
-  }
+    "express": "^4.16.4",
+    "faker": "^4.1.0",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.3.3"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esokoletsky/fullstack-capstone.git"
+  },
+  "bugs": {
+    "url": "https://github.com/esokoletsky/fullstack-capstone/issues"
+  },
+  "homepage": "https://github.com/esokoletsky/fullstack-capstone#readme",
+  "description": ""
 }
