@@ -5,6 +5,11 @@ const mongoose = require('mongoose');
 const faker = require('faker');
 app.use(express.static('public'));
 
+const MockData = require("./public/MOCK_WORKOUT_ROUTINE.json");
+
+app.get("/getMyJSON", (req, res) => {
+    res.json(MockData);
+});
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
