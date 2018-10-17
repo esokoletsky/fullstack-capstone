@@ -5,11 +5,11 @@ const mongoose = require('mongoose');
 const faker = require('faker');
 app.use(express.static('public'));
 
-const MockData = require("./public/MOCK_WORKOUT_ROUTINE.json");
-
 app.get("/getMyJSON", (req, res) => {
     res.json(MockData);
 });
+
+const { DATABASE_URL, PORT } = require('./config');
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -17,14 +17,20 @@ app.get('/', (req, res) => {
 
 let server; 
 
-function runServer() {
-  const port = process.env.PORT || 8080;
+function runServer(databaseUrl = DATABASE_URL, port = PORT) {
   return new Promise((resolve, reject) => {
-    server = app.listen(port, () => {
-      console.log(`Your app is listening on port ${port}`);
-      resolve(server);
-    }).on('error', err => {
-      reject(err)
+    mongoose.connect(databaseUrl, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+        .on('error', err => {
+          mongoose.disconnect();
+          reject(err);
+        });
     });
   });
 }
@@ -47,5 +53,8 @@ function closeServer() {
 if (require.main === module) {
   runServer().catch(err => console.error(err));
 };
+
+if (require.main === module) {
+  runServer(DATABASE_URL).catch(err => console.error(err));
 
 module.exports = {app, runServer, closeServer};
