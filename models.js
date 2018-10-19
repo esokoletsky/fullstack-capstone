@@ -3,12 +3,18 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const routineSchema = mongoose.Schema(
-{
+const clientSchema = mongoose.Schema({
+    firstName: "string",
+    lastName: "string",
     userName: {
         type: "string",
         unique: true
-    },
+    }
+});
+
+const routineSchema = mongoose.Schema(
+{
+    client: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },    
     id: ObjectId,
     day: "string",
     muscleGroup: "string",
@@ -20,6 +26,10 @@ const routineSchema = mongoose.Schema(
     }
 });
 
+routineSchema.virtual('authorName').get(function() {
+    return `${this.client.firstName} ${this.client.lastName}`.trim();
+  });
+
 routineSchema.methods.serialize = function() {
     return {
       id: this._id,
@@ -29,6 +39,17 @@ routineSchema.methods.serialize = function() {
     };
     };
 
-const Routine = mongoose.model('Routine', routineSchema);
+    routineSchema.pre('find', function(next) {
+        this.populate('client');
+        next();
+      });
+      
+      routineSchema.pre('findOne', function(next) {
+        this.populate('client');
+        next();
+      });
 
-module.exports = {Routine};
+const Routine = mongoose.model('Routine', routineSchema);
+const Client = mongoose.model("Client", clientSchema);
+
+module.exports = {Routine, Client};
