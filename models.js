@@ -12,44 +12,53 @@ const clientSchema = mongoose.Schema({
     }
 });
 
-const routineSchema = mongoose.Schema(
+const exerciseSchema = mongoose.Schema(
 {
     client: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },    
-    id: ObjectId,
-    day: "string",
-    muscleGroup: "string",
-    muscle: "string",
-    targetExercise: {
-    weight: number,
-    sets: number,
-    reps: number
-    }
+    day: {type: string, required: true },
+    muscleGroup: {type: string, required: true },
+    muscle: {type: string, required: true },
+    name: {type: string, required: true },    
+    weight: {type: number, required: true },
+    sets: {type: number, required: true },
+    reps: {type: number, required: true }
+
 });
 
-routineSchema.virtual('authorName').get(function() {
+exerciseSchema.virtual('clientName').get(function() {
     return `${this.client.firstName} ${this.client.lastName}`.trim();
   });
 
-routineSchema.methods.serialize = function() {
+exerciseSchema.methods.serialize = function() {
     return {
       id: this._id,
       day: this.day,
       muscleGroup: this.muscleGroup,
-      targetExercise: this.targetExercise  
+      name: this.name,    
+      weight: this.weight,
+      sets: this.sets,
+      reps: this.reps
     };
     };
 
-    routineSchema.pre('find', function(next) {
+    clientSchema.methods.serialize = function() {
+        return {
+            clientName: this.clientName,
+            userName: this.userName
+        };
+    }    
+
+    exerciseSchema.pre('find', function(next) {
         this.populate('client');
         next();
       });
       
-      routineSchema.pre('findOne', function(next) {
+      exercisechema.pre('findOne', function(next) {
         this.populate('client');
         next();
       });
 
-const Routine = mongoose.model('Routine', routineSchema);
+const Exercise = mongoose.model('Exercise', exerciseSchema);
 const Client = mongoose.model("Client", clientSchema);
 
-module.exports = {Routine, Client};
+module.exports = {Exercise, Client};

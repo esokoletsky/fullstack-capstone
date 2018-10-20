@@ -15,6 +15,24 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
   });
 
+  app.get('/clients', (req, res) => {
+    Client
+      .find()
+      .then(clients => {
+        res.json(clients.map(clients => {
+          return {
+            id: client._id,
+            name: `${client.firstName} ${client.lastName}`,
+            userName: client.userName
+          };
+        }));
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'something went terribly wrong' });
+      });
+  });
+
 let server; 
 
 function runServer(databaseUrl = DATABASE_URL, port = PORT) {
