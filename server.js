@@ -33,6 +33,28 @@ app.get('/', (req, res) => {
       });
   });
 
+  app.get('clients', (req, res) => {
+    Client
+      .find()
+      .then(clients => {
+        res.json(clients.map(client => client.serialize()));
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'something went terribly wrong' });
+      });
+  });
+  
+  /*app.get('/clients/:id', (req, res) => {
+    Client
+      .findById(req.params.id)
+      .then(client => res.json(client.serialize()))
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'something went horribly awry' });
+      });
+  });
+*/
 let server; 
 
 function runServer(databaseUrl = DATABASE_URL, port = PORT) {
