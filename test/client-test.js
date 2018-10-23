@@ -2,13 +2,13 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-// const faker = require('faker');
-// const mongoose = require('mongoose');
+const faker = require('faker');
+const mongoose = require('mongoose');
 
 const should = chai.should();
 
 const {app, runServer, closeServer} = require('../server');
-
+const { Client } = require("../models")
 chai.use(chaiHttp);
 
 describe('check-root', function() {
@@ -31,4 +31,6 @@ describe('check-root', function() {
            // res.body.message.should.equal('Hello world');
           });
       });
+
+      
 });
