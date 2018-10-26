@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const clientSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     firstName: "string",
     lastName: "string",
     userName: {
@@ -14,19 +14,19 @@ const clientSchema = mongoose.Schema({
 
 const exerciseSchema = mongoose.Schema(
 {
-    client: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },    
-    day: {type: string, required: true },
-    muscleGroup: {type: string, required: true },
-    muscle: {type: string, required: true },
-    name: {type: string, required: true },    
-    weight: {type: number, required: true },
-    sets: {type: number, required: true },
-    reps: {type: number, required: true }
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },    
+    day: {type: "string", required: true },
+    muscleGroup: {type: "string", required: true },
+    muscle: {type: "string", required: true },
+    name: {type: "string", required: true },    
+    weight: {type: "number", required: true },
+    sets: {type: "number", required: true },
+    reps: {type: "number", required: true }
 
 });
 
-exerciseSchema.virtual('clientName').get(function() {
-    return `${this.client.firstName} ${this.client.lastName}`.trim();
+userSchema.virtual('clientName').get(function() {
+    return `${this.firstName} ${this.lastName}`.trim();
   });
 
 exerciseSchema.methods.serialize = function() {
@@ -41,7 +41,7 @@ exerciseSchema.methods.serialize = function() {
     };
     };
 
-    clientSchema.methods.serialize = function() {
+    userSchema.methods.serialize = function() {
         return {
             clientName: this.clientName,
             userName: this.userName
@@ -49,16 +49,16 @@ exerciseSchema.methods.serialize = function() {
     }    
 
     exerciseSchema.pre('find', function(next) {
-        this.populate('client');
+        this.populate('user');
         next();
       });
       
-      exercisechema.pre('findOne', function(next) {
-        this.populate('client');
+      exerciseSchema.pre('findOne', function(next) {
+        this.populate('user');
         next();
       });
 
 const Exercise = mongoose.model('Exercise', exerciseSchema);
-const Client = mongoose.model("Client", clientSchema);
+const User = mongoose.model("User", userSchema);
 
-module.exports = {Exercise, Client};
+module.exports = {Exercise, User};

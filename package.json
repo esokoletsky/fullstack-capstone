@@ -14,7 +14,7 @@
     "express": "^4.16.4",
     "faker": "^4.1.0",
     "mocha": "^5.2.0",
-    "mongoose": "^5.3.3"
+    "mongoose": "^5.3.6"
   },
   "directories": {
     "test": "test"
