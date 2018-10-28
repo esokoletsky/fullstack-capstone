@@ -43,6 +43,7 @@ exerciseSchema.methods.serialize = function() {
 
     userSchema.methods.serialize = function() {
         return {
+            id: this._id,
             clientName: this.clientName,
             userName: this.userName
         };
@@ -61,4 +62,4 @@ exerciseSchema.methods.serialize = function() {
 const Exercise = mongoose.model('Exercise', exerciseSchema);
 const User = mongoose.model("User", userSchema);
 
-module.exports = {Exercise, User};
+module.exports = {User, Exercise};

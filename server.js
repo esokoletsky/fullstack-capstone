@@ -10,22 +10,18 @@ app.get("/getMyJSON", (req, res) => {
 });
 
 const { DATABASE_URL, PORT } = require('./config');
+const { User, Exercise } = require("./models")
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
   });
 
-  app.get('/clients', (req, res) => {
-    Client
+  app.get('/users', (req, res) => {
+    User
       .find()
-      .then(clients => {
-        res.json(clients.map(clients => {
-          return {
-            id: client._id,
-            name: `${client.firstName} ${client.lastName}`,
-            userName: client.userName
-          };
-        }));
+      .then(users => {
+        res.json(users.map(user => {users: user.serialize()}
+        ));
       })
       .catch(err => {
         console.error(err);
@@ -33,11 +29,11 @@ app.get('/', (req, res) => {
       });
   });
 
-  app.get('clients', (req, res) => {
-    Client
+  app.get('/users:id', (req, res) => {
+    User
       .find()
-      .then(clients => {
-        res.json(clients.map(client => client.serialize()));
+      .then(users => {
+        res.json(users.map(user => user.serialize()));
       })
       .catch(err => {
         console.error(err);
@@ -45,16 +41,6 @@ app.get('/', (req, res) => {
       });
   });
   
-  /*app.get('/clients/:id', (req, res) => {
-    Client
-      .findById(req.params.id)
-      .then(client => res.json(client.serialize()))
-      .catch(err => {
-        console.error(err);
-        res.status(500).json({ error: 'something went horribly awry' });
-      });
-  });
-*/
 let server; 
 
 function runServer(databaseUrl = DATABASE_URL, port = PORT) {
