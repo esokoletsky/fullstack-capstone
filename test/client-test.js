@@ -14,30 +14,7 @@ const { TEST_DATABASE_URL } = require('../config');
 
 chai.use(chaiHttp);
 
-/*describe('check-root', function() {
-    
-    before(function() {
-        return runServer();
-      });
-    
-      after(function() {
-        return closeServer();
-      });
 
-      it('should return a 200 status', function() {
-          return chai.request(app)
-          .get('/')
-          .then(function(res){
-            res.should.have.status(200);
-            res.should.be.html;
-           // res.body.should.be.a('object');
-           // res.body.message.should.equal('Hello world');
-          });
-      });
-
-      
-});
-*/
 
 function tearDownDb() {
   return new Promise((resolve, reject) => {
@@ -49,19 +26,53 @@ function tearDownDb() {
 }
 
 function seedDatabase(){
-  for(var j = 0; j < 20; j++){
-      seedUser();
+  return seedUsers()
+  .then((data)=>{
+    seedExcercises()
+  });
   }
 
- // seedExcercises();
+
+function seedUsers(){
+  console.info('seeding users');
+  const seedData = [];
+  for (let i = 1; i <= 10; i++) {
+    seedData.push({
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      userName: faker.internet.userName()  
+    });
+  }
+  return User.insertMany(seedData);
 }
 
-function seedUser(){
-  return User.create({
-   firstName: faker.name.firstName(),
-   lastName: faker.name.lastName(),
-   userName: faker.internet.userName()
-});
+function seedExcercises() {
+  console.info('seeding exercises');
+  const seedData = [];
+  for (let i = 1; i <= 10; i++){ 
+  seedData.push({
+    day: faker.lorem.text(),
+    muscleGroup: faker.lorem.text(),
+    muscle: faker.lorem.text(),
+    name: faker.lorem.text(),
+    weight: faker.random.number(),
+    sets: faker.random.number(),
+    reps: faker.random.number(),
+   });
+}
+ return Exercise.insertMany(seedData);
+}
+
+/*function seedExcercise(userId, excercise) {
+return Excercise.create({
+   day: faker.lorem.text(),
+   muscleGroup: faker.lorem.text(),
+   muscle: faker.lorem.text(),
+   name: faker.lorem.text(),
+  weight: faker.lorem.number(),
+  sets: faker.lorem.number(),
+  reps: faker.lorem.number(),
+   user: userId });
 }
 
 function seedExcercises(){
@@ -75,18 +86,8 @@ function seedExcercises(){
       }
   })
 }
+*/
 
-function seedExcercise(userId, excercise) {
-return Excercise.create({
-   day: faker.lorem.text(),
-   muscleGroup: faker.lorem.text(),
-   muscle: faker.lorem.text(),
-   name: faker.lorem.text(),
-  weight: faker.lorem.number(),
-  sets: faker.lorem.number(),
-  reps: faker.lorem.number(),
-   user: userId });
-}
 
 describe('Client Exercise API resource', function () {
 
@@ -107,7 +108,7 @@ describe('Client Exercise API resource', function () {
     return closeServer();
   });
 
-describe('GET endpoint', function () {
+describe('GET endpoints', function () {
 
   it('should return all existing users', function () {
     let res;
@@ -115,18 +116,14 @@ describe('GET endpoint', function () {
       .get('/users')
       .then(_res => {
         res = _res;
-        console.log(res.body);
         res.should.have.status(200);
         res.body.users.should.have.lengthOf.at.least(1);
-        res.should.have.status(200);
-        res.body.users.should.be.json;
+        res.should.be.json;
         res.body.users.should.be.a('array');
-        res.body.users.should.have.lengthOf.at.least(1);
-
         res.body.users.forEach(function (user) {
           user.should.be.a('object');
           user.should.include.keys('id', 'clientName', 'userName'); 
-
+        })
         return User.count();
       })
       .then(count => {
@@ -161,9 +158,8 @@ describe('GET endpoint', function () {
       });
   });
   */
-
 });
 
-});
+
 
 });

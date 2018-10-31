@@ -20,8 +20,8 @@ app.get('/', (req, res) => {
     User
       .find()
       .then(users => {
-        res.json(users.map(user => {users: user.serialize()}
-        ));
+        res.json({users: users.map(user => user.serialize())}
+        );
       })
       .catch(err => {
         console.error(err);
