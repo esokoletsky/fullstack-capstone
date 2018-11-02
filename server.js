@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
       });
   });
 
-  app.get('/users:id', (req, res) => {
+app.get('/users:id', (req, res) => {
     User
       .find()
       .then(users => {
@@ -40,7 +40,21 @@ app.get('/', (req, res) => {
         res.status(500).json({ error: 'something went terribly wrong' });
       });
   });
-  
+
+  app.get('/exercises', (req, res) => {
+    Exercise
+      .find()
+      .then(exercises => {
+        res.json({exercises: ecercises.map(exercise => exercise.serialize())}
+        );
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'something went terribly wrong' });
+      });
+  });
+
+
 let server; 
 
 function runServer(databaseUrl = DATABASE_URL, port = PORT) {

@@ -110,7 +110,7 @@ describe('Client Exercise API resource', function () {
 
 describe('GET endpoints', function () {
 
-  it('should return all existing users with their exercises', function () {
+  it('should return all existing users', function () {
     let res;
     return chai.request(app)
       .get('/users')
@@ -157,6 +157,26 @@ describe('GET endpoints', function () {
       });
   });
 
+  it('should return all existing users with their exercises', function () {
+    let res;
+    return chai.request(app)
+      .get('/users')
+      .then(_res => {
+        res = _res;
+        res.should.have.status(200);
+        res.body.users.should.have.lengthOf.at.least(1);
+        res.should.be.json;
+        res.body.users.should.be.a('array');
+        res.body.users.forEach(function (user) {
+          user.should.be.a('object');
+          user.should.include.keys('clientName', 'userName'); 
+        })
+        return User.count();
+      })
+      .then(count => {
+        res.body.users.should.have.lengthOf(count);
+      });
+  });
 });
 
 
