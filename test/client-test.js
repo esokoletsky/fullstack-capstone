@@ -40,7 +40,7 @@ function seedUsers(){
     seedData.push({
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      userName: faker.internet.userName()  
+      userName: faker.internet.userName(),
     });
   }
   return User.insertMany(seedData);
@@ -110,7 +110,7 @@ describe('Client Exercise API resource', function () {
 
 describe('GET endpoints', function () {
 
-  it('should return all existing users', function () {
+  it('should return all existing users with their exercises', function () {
     let res;
     return chai.request(app)
       .get('/users')
@@ -122,7 +122,7 @@ describe('GET endpoints', function () {
         res.body.users.should.be.a('array');
         res.body.users.forEach(function (user) {
           user.should.be.a('object');
-          user.should.include.keys('id', 'clientName', 'userName'); 
+          user.should.include.keys('clientName', 'userName'); 
         })
         return User.count();
       })
@@ -131,7 +131,7 @@ describe('GET endpoints', function () {
       });
   });
 
-  /*
+
   it('should return users with right fields', function () {
 
     let resPost;
@@ -141,23 +141,22 @@ describe('GET endpoints', function () {
 
         res.should.have.status(200);
         res.should.be.json;
-        res.body.should.be.a('array');
-        res.body.should.have.lengthOf.at.least(1);
-        res.body.forEach(function (post) {
-          post.should.be.a('object');
-          post.should.include.keys('firstName', 'lastName', 'userName');
+        res.body.users.should.have.lengthOf.at.least(1);
+        res.body.users.forEach(function (post) {
+        post.should.be.a('object');
+        post.should.include.keys('clientName', 'userName', 'id' );
         });
 
-        resPost = res.body[0];
+        resPost = res.body.users[0];
         return User.findById(resPost.id);
       })
       .then(post => {
-        resPost.firstName.should.equal(post.firstName);
-        resPost.lastName.should.equal(post.lastName);
         resPost.userName.should.equal(post.userName);
+        resPost.id.should.equal(post.id);
+        resPost.clientName.should.equal(post.clientName);
       });
   });
-  */
+
 });
 
 
