@@ -34,6 +34,7 @@ exerciseSchema.methods.serialize = function() {
       id: this._id,
       day: this.day,
       muscleGroup: this.muscleGroup,
+      muscle: this.muscle,
       name: this.name,    
       weight: this.weight,
       sets: this.sets,

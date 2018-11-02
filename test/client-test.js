@@ -63,32 +63,6 @@ function seedExcercises() {
  return Exercise.insertMany(seedData);
 }
 
-/*function seedExcercise(userId, excercise) {
-return Excercise.create({
-   day: faker.lorem.text(),
-   muscleGroup: faker.lorem.text(),
-   muscle: faker.lorem.text(),
-   name: faker.lorem.text(),
-  weight: faker.lorem.number(),
-  sets: faker.lorem.number(),
-  reps: faker.lorem.number(),
-   user: userId });
-}
-
-function seedExcercises(){
-  return User.find().exec().
-  then(users => {
-      for(var i = 0; i < users.length; i++){
-          for(var j = 0; j < 5; j++){
-              let newExcercise = new Excercise();
-              seedExcercise(users[i]._id, newExcercise);
-          }
-      }
-  })
-}
-*/
-
-
 describe('Client Exercise API resource', function () {
 
   before(function () {
@@ -118,12 +92,7 @@ describe('GET endpoints', function () {
         res = _res;
         res.should.have.status(200);
         res.body.users.should.have.lengthOf.at.least(1);
-        res.should.be.json;
-        res.body.users.should.be.a('array');
-        res.body.users.forEach(function (user) {
-          user.should.be.a('object');
-          user.should.include.keys('clientName', 'userName'); 
-        })
+
         return User.count();
       })
       .then(count => {
@@ -141,6 +110,7 @@ describe('GET endpoints', function () {
 
         res.should.have.status(200);
         res.should.be.json;
+        res.body.users.should.be.a('array');
         res.body.users.should.have.lengthOf.at.least(1);
         res.body.users.forEach(function (post) {
         post.should.be.a('object');
@@ -157,26 +127,52 @@ describe('GET endpoints', function () {
       });
   });
 
-  it('should return all existing users with their exercises', function () {
+  it('should return all existing exercises', function () {
     let res;
     return chai.request(app)
-      .get('/users')
+      .get('/exercises')
       .then(_res => {
         res = _res;
         res.should.have.status(200);
-        res.body.users.should.have.lengthOf.at.least(1);
-        res.should.be.json;
-        res.body.users.should.be.a('array');
-        res.body.users.forEach(function (user) {
-          user.should.be.a('object');
-          user.should.include.keys('clientName', 'userName'); 
-        })
-        return User.count();
+        res.body.exercises.should.have.lengthOf.at.least(1);
+
+        return Exercise.count();
       })
       .then(count => {
-        res.body.users.should.have.lengthOf(count);
+        res.body.exercises.should.have.lengthOf(count);
       });
   });
+
+  it('should return exercises with right fields', function () {
+
+    let resPost;
+    return chai.request(app)
+      .get('/exercises')
+      .then(function (res) {
+
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.exercises.should.be.a('array');
+        res.body.exercises.should.have.lengthOf.at.least(1);
+        res.body.exercises.forEach(function (post) {
+        post.should.be.a('object');
+        post.should.include.keys('id', 'day', 'muscleGroup', 'muscle', 'name', 'weight', 'sets', 'reps');
+        });
+        resPost = res.body.exercises[0];
+        return Exercise.findById(resPost.id);
+      })
+      .then(post => {
+        resPost.id.should.equal(post.id);
+        resPost.day.should.equal(post.day);
+        resPost.muscleGroup.should.equal(post.muscleGroup);
+        resPost.muscle.should.equal(post.muscle);
+        resPost.name.should.equal(post.name);
+        resPost.weight.should.equal(post.weight);
+        resPost.sets.should.equal(post.sets);
+        resPost.reps.should.equal(post.reps);
+      });
+  });
+
 });
 
 
