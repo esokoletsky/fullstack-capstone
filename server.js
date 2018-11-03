@@ -54,6 +54,30 @@ app.get('/users:id', (req, res) => {
       });
   });
 
+  app.post('/users', (req, res) => {
+    const requiredFields = [ 'clientName', 'userName' ];
+    for (let i = 0; i < requiredFields.length; i++) {
+      const field = requiredFields[i];
+      if (!(field in req.body)) {
+        const message = `Missing \`${field}\` in request body`;
+        console.error(message);
+        return res.status(400).send(message);
+      }
+    }
+  
+    User
+      .create({
+        clientName: req.body.clientName,
+        userName: req.body.userName,
+      })
+      .then(user => res.status(201).json(user.serialize()))
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+      });
+  
+  });
+  
 
 let server; 
 

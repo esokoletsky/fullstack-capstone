@@ -175,6 +175,37 @@ describe('GET endpoints', function () {
 
 });
 
+describe('POST endpoint', function () {
 
+  it('should add a new user', function () {
+
+    const newUser = {
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      userName: faker.internet.userName(),
+    };
+
+    return chai.request(app)
+      .post('/users')
+      .send(newUser)
+      .then(function (res) {
+        res.should.have.status(201);
+        res.should.be.json;
+        res.body.should.be.a('object');
+        res.body.should.include.keys 
+        ( 'id', 'clientName', 'userName' );
+        res.body.should.equal(newUser.userName);
+        res.body.id.should.not.be.null;
+        res.body.clientName.should.equal(
+          `${newUser.firstName} ${newUser.lastName}`);
+        return User.findById(res.body.id);
+      })
+      .then(function (post) {
+        post.userName.should.equal(newUser.userName);
+        post.clientName.firstName.should.equal(newUser.clientName.firstName);
+        post.clientName.lastName.should.equal(newUser.clientName.lastName);
+      });
+  });
+});
 
 });
