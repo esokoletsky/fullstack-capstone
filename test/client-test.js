@@ -187,6 +187,7 @@ describe('POST endpoint', function () {
 
     return chai.request(app)
       .post('/users')
+      .set('content-type', 'application/x-www-form-urlencoded') 
       .send(newUser)
       .then(function (res) {
         res.should.have.status(201);
