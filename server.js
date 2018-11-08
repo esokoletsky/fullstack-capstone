@@ -4,7 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 const faker = require('faker');
 app.use(express.static('public'));
-
+app.use(express.json());
 app.get("/getMyJSON", (req, res) => {
     res.json(MockData);
 });
@@ -55,7 +55,7 @@ app.get('/users:id', (req, res) => {
   });
 
   app.post('/users', (req, res) => {
-    const requiredFields = [ 'clientName', 'userName' ];
+    const requiredFields = [ 'firstName','lastName', 'userName' ];
     for (let i = 0; i < requiredFields.length; i++) {
       const field = requiredFields[i];
       if (!(field in req.body)) {
@@ -66,10 +66,7 @@ app.get('/users:id', (req, res) => {
     }
   
     User
-      .create({
-        clientName: req.body.clientName,
-        userName: req.body.userName,
-      })
+      .create(req.body)
       .then(user => res.status(201).json(user.serialize()))
       .catch(err => {
         console.error(err);

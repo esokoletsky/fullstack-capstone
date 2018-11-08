@@ -187,7 +187,7 @@ describe('POST endpoint', function () {
 
     return chai.request(app)
       .post('/users')
-      .set('content-type', 'application/x-www-form-urlencoded') 
+      .set('content-type', 'application/json')
       .send(newUser)
       .then(function (res) {
         res.should.have.status(201);
@@ -195,7 +195,7 @@ describe('POST endpoint', function () {
         res.body.should.be.a('object');
         res.body.should.include.keys 
         ( 'id', 'clientName', 'userName' );
-        res.body.should.equal(newUser.userName);
+        res.body.userName.should.equal(newUser.userName);
         res.body.id.should.not.be.null;
         res.body.clientName.should.equal(
           `${newUser.firstName} ${newUser.lastName}`);
@@ -203,8 +203,8 @@ describe('POST endpoint', function () {
       })
       .then(function (post) {
         post.userName.should.equal(newUser.userName);
-        post.clientName.firstName.should.equal(newUser.clientName.firstName);
-        post.clientName.lastName.should.equal(newUser.clientName.lastName);
+        post.firstName.should.equal(newUser.firstName);
+        post.lastName.should.equal(newUser.lastName);
       });
   });
 });
