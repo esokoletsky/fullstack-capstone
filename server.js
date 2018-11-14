@@ -105,14 +105,34 @@ app.get('/users/:id', (req, res) => {
 
     const updated = {};
     const updatableFields = ['firstName', 'lastName', 'userName'];
-    updateableFields.forEach(field => {
+    updatableFields.forEach(field => {
       if (field in req.body) {
-        updated[field] = req.body[filed];
+        updated[field] = req.body[field];
       }
     });
     User
       .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
       .then(updateUser => res.status(204).end())
+      .catch(err => res.status(500).json({ message: 'something went wrong' }));
+  });
+
+  app.put('/exercises/:id', (req,res) => {
+    if(!(req.params.id &&  req.params.id === req.body.id)) {
+      res.status(400).json({
+        error: 'Request path id and request body id must match'
+      });
+    }
+
+    const updated = {};
+    const updatableFields = [ 'day', 'muscleGroup', 'muscle', 'name', 'weight', 'sets', 'reps' ];
+    updatableFields.forEach(field => {
+      if (field in req.body) {
+        updatable[field] = req.body[field];
+      }
+    });
+    Exercise
+      .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
+      .then(updateExercise => res.status(204).end())
       .catch(err => res.status(500).json({ message: 'something went wrong' }));
   });
 

@@ -253,7 +253,32 @@ describe('POST endpoint', function () {
 });
 
 describe('PUT endpoints', function() {
+ it('should update fields in your User send over', function() {
+   const updateData = {
+     firstName: 'Joe',
+     lastName: 'Shmoe',
+     userName: 'JShmoe'
+   };
 
-})
+   return User
+    .findOne()
+    .then(user => {
+      updateData.id = user.id;
+
+      return chai.request(app)
+      .put(`/users/${user.id}`)
+      .send(updateData);
+    })
+    .then(res => {
+      res.should.have.status(204);
+      return User.findById(updateData.id);
+    })
+    .then(user => {
+      user.firstName.should.equal(updateData.firstName);
+      user.lastName.should.equal(updateData.lastName);
+      user.userName.should.equal(updateData.userName);
+    });
+ });
+});
 
 });
