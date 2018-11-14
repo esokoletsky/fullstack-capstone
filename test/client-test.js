@@ -84,46 +84,45 @@ describe('Client Exercise API resource', function () {
 
 describe('GET endpoints', function () {
 
-  it('should return all existing users', function () {
-    let res;
-    return chai.request(app)
-      .get('/users')
-      .then(_res => {
-        res = _res;
-        res.should.have.status(200);
-        res.body.users.should.have.lengthOf.at.least(1);
+  it('should return an individual user id', function () {
+    let user;
+    return User
+    .findOne()
+    .then(_user => {
+      user = _user;
+      return chai.request(app).get(`/users/${user.id}`);
+    })
+    .then(res => {
+      res.should.have.status(201);
+      res.body.id.should.equal(user.id);
+      res.body.clientName.should.equal(`${user.firstName} ${user.lastName}`.trim());
+      res.body.userName.should.equal(user.userName);
+      
+    })
 
-        return User.count();
-      })
-      .then(count => {
-        res.body.users.should.have.lengthOf(count);
-      });
-  });
 
+  })
 
   it('should return users with right fields', function () {
 
-    let resPost;
+    let res;
     return chai.request(app)
       .get('/users')
-      .then(function (res) {
-
+      .then(function (_res) {
+        res = _res;
         res.should.have.status(200);
         res.should.be.json;
         res.body.users.should.be.a('array');
         res.body.users.should.have.lengthOf.at.least(1);
-        res.body.users.forEach(function (post) {
-        post.should.be.a('object');
-        post.should.include.keys('clientName', 'userName', 'id' );
+        res.body.users.forEach(function (user) {
+          user.should.be.a('object');
+          user.should.include.keys('clientName', 'userName', 'id' );
         });
-
-        resPost = res.body.users[0];
-        return User.findById(resPost.id);
+        
+        return User.count();
       })
-      .then(post => {
-        resPost.userName.should.equal(post.userName);
-        resPost.id.should.equal(post.id);
-        resPost.clientName.should.equal(post.clientName);
+      .then(count => {
+        res.body.users.should.have.lengthOf(count);
       });
   });
 
@@ -201,12 +200,60 @@ describe('POST endpoint', function () {
           `${newUser.firstName} ${newUser.lastName}`);
         return User.findById(res.body.id);
       })
-      .then(function (post) {
-        post.userName.should.equal(newUser.userName);
-        post.firstName.should.equal(newUser.firstName);
-        post.lastName.should.equal(newUser.lastName);
+      .then(function (user) {
+        user.userName.should.equal(newUser.userName);
+        user.firstName.should.equal(newUser.firstName);
+        user.lastName.should.equal(newUser.lastName);
       });
   });
+
+  it('should add a new exercise routine', function () {
+
+    const newRoutine = {
+      day: faker.lorem.text(),
+      muscleGroup: faker.lorem.text(),
+      muscle: faker.lorem.text(),
+      name: faker.lorem.text(),
+      weight: faker.random.number(),
+      sets: faker.random.number(),
+      reps: faker.random.number(),
+    };
+
+    return chai.request(app)
+      .post('/exercises')
+      .set('content-type', 'application/json')
+      .send(newRoutine)
+      .then(function (res) {
+        res.should.have.status(201);
+        res.should.be.json;
+        res.body.should.be.a('object');
+        res.body.should.include.keys 
+        ( 'id', 'day', 'muscleGroup', 'muscle', 'name', 'weight', 'sets', 'reps' );
+        res.body.day.should.equal(newRoutine.day);
+        res.body.id.should.not.be.null;
+        res.body.muscleGroup.should.equal(newRoutine.muscleGroup);
+        res.body.muscle.should.equal(newRoutine.muscle);
+        res.body.name.should.equal(newRoutine.name);
+        res.body.weight.should.equal(newRoutine.weight);
+        res.body.sets.should.equal(newRoutine.sets);
+        res.body.reps.should.equal(newRoutine.reps);
+        return Exercise.findById(res.body.id);
+      })
+      .then(function (post) {
+        post.day.should.equal(newRoutine.day);
+        post.muscleGroup.should.equal(newRoutine.muscleGroup);
+        post.muscle.should.equal(newRoutine.muscle);
+        post.name.should.equal(newRoutine.name);
+        post.weight.should.equal(newRoutine.weight);
+        post.sets.should.equal(newRoutine.sets);
+        post.reps.should.equal(newRoutine.reps);
+      });
+  });
+
 });
+
+describe('PUT endpoints', function() {
+
+})
 
 });

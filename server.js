@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
     User
       .find()
       .then(users => {
-        res.json({users: users.map(user => user.serialize())}
+        res.status(200).json({users: users.map(user => user.serialize())}
         );
       })
       .catch(err => {
@@ -29,12 +29,10 @@ app.get('/', (req, res) => {
       });
   });
 
-app.get('/users:id', (req, res) => {
+app.get('/users/:id', (req, res) => {
     User
-      .find()
-      .then(users => {
-        res.json(users.map(user => user.serialize()));
-      })
+      .findById(req.params.id)
+      .then(user => res.status(201).json(user.serialize()))
       .catch(err => {
         console.error(err);
         res.status(500).json({ error: 'something went terribly wrong' });
@@ -74,7 +72,49 @@ app.get('/users:id', (req, res) => {
       });
   
   });
+
+  app.post('/exercises', (req, res) => {
+    const requiredFields = [ 'day', 'muscleGroup', 'muscle', 'name', 'weight', 'sets', 'reps' ];
+    for (let i = 0; i < requiredFields.length; i++) {
+      const field = requiredFields[i];
+      if (!(field in req.body)) {
+        const message = `Missing \`${field}\` in request body`;
+        console.error(message);
+        return res.status(400).send(message);
+      }
+    }
   
+       Exercise
+      .create(req.body)
+      .then(exercise => {
+         res.status(201).json(exercise.serialize())
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+      });
+  
+  });
+
+  app.put('/users/:id', (req,res) => {
+    if(!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+      res.status(400).json({
+        error: 'Request path id and request body id values must match'
+      });
+    }
+
+    const updated = {};
+    const updatableFields = ['firstName', 'lastName', 'userName'];
+    updateableFields.forEach(field => {
+      if (field in req.body) {
+        updated[field] = req.body[filed];
+      }
+    });
+    User
+      .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
+      .then(updateUser => res.status(204).end())
+      .catch(err => res.status(500).json({ message: 'something went wrong' }));
+  });
 
 let server; 
 
