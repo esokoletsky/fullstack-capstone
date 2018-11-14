@@ -253,6 +253,7 @@ describe('POST endpoint', function () {
 });
 
 describe('PUT endpoints', function() {
+
  it('should update fields in your User send over', function() {
    const updateData = {
      firstName: 'Joe',
@@ -280,5 +281,41 @@ describe('PUT endpoints', function() {
     });
  });
 });
+
+it('should update fields in your exercise send over', function() {
+  const updateData = {
+    day: 'Monday',
+    muscleGroup: 'arms',
+    muscle: 'bicep',
+    name: 'curl',    
+    weight: 100,
+    sets: 3,
+    reps: 12
+  };
+
+  return Exercise
+    .findOne()
+    .then(exercise => {
+      console.log(exercise)
+      updateData.id = exercise.id;
+
+      return chai.request(app)
+      .put(`/exercises/${exercise.id}`)
+      .send(updateData);
+    })
+    .then(res => {
+      res.should.have.status(204);
+      return Exercise.findById(updateData.id);
+    })
+    .then(exercise => {
+      exercise.day.should.equal(updateData.day);
+      exercise.muscleGroup.should.equal(updateData.muscleGroup);
+      exercise.muscle.should.equal(updateData.muscle);
+      exercise.name.should.equal(updateData.name);
+      exercise.weight.should.equal(updateData.weight);
+      exercise.sets.should.equal(updateData.sets);
+      exercise.reps.should.equal(updateData.reps);
+    });
+ });
 
 });
