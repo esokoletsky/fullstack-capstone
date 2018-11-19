@@ -117,7 +117,7 @@ app.get('/users/:id', (req, res) => {
   });
 
   app.put('/exercises/:id', (req,res) => {
-    if(!(req.params.id && req.params.id && req.params.id === req.body.id)) {
+    if(!(req.params.id && req.body.id && req.params.id === req.body.id)) {
       res.status(400).json({
         error: 'Request path id and request body id must match'
       });
@@ -127,7 +127,7 @@ app.get('/users/:id', (req, res) => {
     const updatableFields = [ 'day', 'muscleGroup', 'muscle', 'name', 'weight', 'sets', 'reps' ];
     updatableFields.forEach(field => {
       if (field in req.body) {
-        updatable[field] = req.body[field];
+        updated[field] = req.body[field];
       }
     });
     Exercise

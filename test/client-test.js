@@ -28,7 +28,7 @@ function tearDownDb() {
 function seedDatabase(){
   return seedUsers()
   .then((data)=>{
-    seedExcercises()
+    return seedExcercises();
   });
   }
 
@@ -296,7 +296,6 @@ it('should update fields in your exercise send over', function() {
   return Exercise
     .findOne()
     .then(exercise => {
-      console.log(exercise)
       updateData.id = exercise.id;
 
       return chai.request(app)
