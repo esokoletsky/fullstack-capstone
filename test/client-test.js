@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 
 const should = chai.should();
 
-const { User, Exercise } = require("../models");
+const { Exercise } = require("../models");
 const {app, runServer, closeServer} = require('../server');
 const { TEST_DATABASE_URL } = require('../config');
 
@@ -176,37 +176,7 @@ describe('GET endpoints', function () {
 
 describe('POST endpoint', function () {
 
-  it('should add a new user', function () {
-
-    const newUser = {
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      userName: faker.internet.userName(),
-    };
-
-    return chai.request(app)
-      .post('/users')
-      .set('content-type', 'application/json')
-      .send(newUser)
-      .then(function (res) {
-        res.should.have.status(201);
-        res.should.be.json;
-        res.body.should.be.a('object');
-        res.body.should.include.keys 
-        ( 'id', 'clientName', 'userName' );
-        res.body.userName.should.equal(newUser.userName);
-        res.body.id.should.not.be.null;
-        res.body.clientName.should.equal(
-          `${newUser.firstName} ${newUser.lastName}`);
-        return User.findById(res.body.id);
-      })
-      .then(function (user) {
-        user.userName.should.equal(newUser.userName);
-        user.firstName.should.equal(newUser.firstName);
-        user.lastName.should.equal(newUser.lastName);
-      });
-  });
-
+  
   it('should add a new exercise routine', function () {
 
     const newRoutine = {
