@@ -1,16 +1,37 @@
-"use strict"
+'use strict';
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const faker = require('faker');
+const passport = require('passport');
 app.use(express.static('public'));
 app.use(express.json());
+app.use(morgan('common'));
+
+mongoose.Promise = global.Promise;
+
+
 app.get("/getMyJSON", (req, res) => {
     res.json(MockData);
 });
 
 const { DATABASE_URL, PORT } = require('./config');
 const { User, Exercise } = require("./models")
+
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.send(204);
+  }
+  next();
+});
+
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
