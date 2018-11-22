@@ -7,17 +7,22 @@ const faker = require('faker');
 const passport = require('passport');
 app.use(express.static('public'));
 app.use(express.json());
-app.use(morgan('common'));
+//app.use(morgan('common'));
 
 mongoose.Promise = global.Promise;
 
 
-app.get("/getMyJSON", (req, res) => {
+
+/* app.get("/getMyJSON", (req, res) => {
     res.json(MockData);
 });
-
+ */
 const { DATABASE_URL, PORT } = require('./config');
-const { User, Exercise } = require("./models")
+const { Exercise } = require("./models");
+const { User } = require('./users/models');
+const { localStrategy } = require('./auth/strategies');
+const { jwtStrategy } = require('./auth/strategies');
+const { router: authRouter } = require('./auth');
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -32,6 +37,7 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
+app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');

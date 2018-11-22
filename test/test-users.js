@@ -1,7 +1,18 @@
+/*'use strict';
 
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const faker = require('faker');
+const mongoose = require('mongoose');
+mongoose.promise = global.Promise;
+
+const should = chai.should();
 
 const { TEST_DATABASE_URL } = require('../config');
-const { User } = require("./users/models");
+const { User } = require("../users/models");
+const {app, runServer, closeServer} = require('../server');
+
+chai.use(chaiHttp);
 
 function tearDownDb() {
     return new Promise((resolve, reject) => {
@@ -30,7 +41,7 @@ function tearDownDb() {
     return User.insertMany(seedData);
   }
 
-describe('/api/user', function() {
+describe('User API resource', function() {
   
     before(function () {
         return runServer(TEST_DATABASE_URL);
@@ -49,9 +60,8 @@ describe('/api/user', function() {
         return closeServer();
       });
 
-describe('/users', function() {
-    describe('POST', function() {
-      it('Should reject users with missing userName', function() {
+    describe('POST endpoints', function() {
+/*       it('Should reject users with missing userName', function() {
         return chai
           .request(app)
           .post('/users')
@@ -74,8 +84,8 @@ describe('/users', function() {
             expect(res.body.message).to.equal('Missing field');
             expect(res.body.location).to.equal('userName');
           });
-      });
-      it('Should reject users with missing password', function() {
+      }); */
+/*       it('Should reject users with missing password', function() {
         return chai
           .request(app)
           .post('/users')
@@ -98,8 +108,8 @@ describe('/users', function() {
             expect(res.body.message).to.equal('Missing field');
             expect(res.body.location).to.equal('password');
           });
-      });
-      it('Should reject users with non-string userName', function() {
+      }); */
+/*       it('Should reject users with non-string userName', function() {
         return chai
           .request(app)
           .post('/users')
@@ -125,8 +135,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('userName');
           });
-      });
-      it('Should reject users with non-string password', function() {
+      }); */
+ /*      it('Should reject users with non-string password', function() {
         return chai
           .request(app)
           .post('/users')
@@ -152,8 +162,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('password');
           });
-      });
-      it('Should reject users with non-string first name', function() {
+      }); */
+/*       it('Should reject users with non-string first name', function() {
         return chai
           .request(app)
           .post('/users')
@@ -179,8 +189,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('firstName');
           });
-      });
-      it('Should reject users with non-string last name', function() {
+      }); */
+/*       it('Should reject users with non-string last name', function() {
         return chai
           .request(app)
           .post('/users')
@@ -206,8 +216,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('lastName');
           });
-      });
-      it('Should reject users with non-trimmed userName', function() {
+      }); */
+/*       it('Should reject users with non-trimmed userName', function() {
         return chai
           .request(app)
           .post('/users')
@@ -233,8 +243,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('userName');
           });
-      });
-      it('Should reject users with non-trimmed password', function() {
+      }); */
+/*       it('Should reject users with non-trimmed password', function() {
         return chai
           .request(app)
           .post('/users')
@@ -260,8 +270,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('password');
           });
-      });
-      it('Should reject users with empty userName', function() {
+      }); */
+/*       it('Should reject users with empty userName', function() {
         return chai
           .request(app)
           .post('/users')
@@ -287,8 +297,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('userName');
           });
-      });
-      it('Should reject users with password less than ten characters', function() {
+      }); */
+/*       it('Should reject users with password less than ten characters', function() {
         return chai
           .request(app)
           .post('/users')
@@ -314,8 +324,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('password');
           });
-      });
-      it('Should reject users with password greater than 72 characters', function() {
+      }); */
+     /*  it('Should reject users with password greater than 72 characters', function() {
         return chai
           .request(app)
           .post('/users')
@@ -341,8 +351,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('password');
           });
-      });
-      it('Should reject users with duplicate userName', function() {
+      }); */
+/*       it('Should reject users with duplicate userName', function() {
         // Create an initial user
         return User.create({
           userName,
@@ -375,8 +385,8 @@ describe('/users', function() {
             );
             expect(res.body.location).to.equal('userName');
           });
-      });
-      it('Should create a new user', function() {
+      }); */
+/*       it('Should create a new user', function() {
         return chai
           .request(app)
           .post('/users')
@@ -410,8 +420,8 @@ describe('/users', function() {
           .then(passwordIsCorrect => {
             expect(passwordIsCorrect).to.be.true;
           });
-      });
-      it('Should trim firstName and lastName', function() {
+      }); */
+/*       it('Should trim firstName and lastName', function() {
         return chai
           .request(app)
           .post('/users')
@@ -441,10 +451,9 @@ describe('/users', function() {
             expect(user.firstName).to.equal(firstName);
             expect(user.lastName).to.equal(lastName);
           });
-      });
-    });
-
-    it('should add a new user', function () {
+      }); */
+    
+        /* it('should add a new user', function () {
 
         const newUser = {
           firstName: faker.name.firstName(),
@@ -474,4 +483,82 @@ describe('/users', function() {
             user.lastName.should.equal(newUser.lastName);
           });
       });
+    
     });
+
+    describe('PUT endpoints', function() {
+
+      it('should update fields in your User send over', function() {
+        const updateData = {
+          firstName: 'Joe',
+          lastName: 'Shmoe',
+          userName: 'JShmoe'
+        };
+     
+        return User
+         .findOne()
+         .then(user => {
+           updateData.id = user.id;
+     
+           return chai.request(app)
+           .put(`/users/${user.id}`)
+           .send(updateData);
+         })
+         .then(res => {
+           res.should.have.status(204);
+           return User.findById(updateData.id);
+         })
+         .then(user => {
+           user.firstName.should.equal(updateData.firstName);
+           user.lastName.should.equal(updateData.lastName);
+           user.userName.should.equal(updateData.userName);
+         });
+      });
+     });
+  
+
+    describe('GET endpoints', function () {
+
+      it('should return an individual user id', function () {
+        let user;
+        return User
+        .findOne()
+        .then(_user => {
+          user = _user;
+          return chai.request(app).get(`/users/${user.id}`);
+        })
+        .then(res => {
+          res.should.have.status(201);
+          res.body.id.should.equal(user.id);
+          res.body.clientName.should.equal(`${user.firstName} ${user.lastName}`.trim());
+          res.body.userName.should.equal(user.userName);
+          
+        })
+    
+    
+      })
+    
+      it('should return users with right fields', function () {
+    
+        let res;
+        return chai.request(app)
+          .get('/users')
+          .then(function (_res) {
+            res = _res;
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.users.should.be.a('array');
+            res.body.users.should.have.lengthOf.at.least(1);
+            res.body.users.forEach(function (user) {
+              user.should.be.a('object');
+              user.should.include.keys('clientName', 'userName', 'id' );
+            });
+            
+            return User.count();
+          })
+          .then(count => {
+            res.body.users.should.have.lengthOf(count);
+        });
+      });
+    });    
+  }); */
