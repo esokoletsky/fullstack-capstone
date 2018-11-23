@@ -1,4 +1,4 @@
-/* 'use strict';
+'use strict';
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -200,4 +200,4 @@ it('should update fields in your exercise send over', function() {
  });
 
 });
-}); */
+});
